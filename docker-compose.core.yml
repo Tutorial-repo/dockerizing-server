@@ -1,0 +1,23 @@
+version: "3"
+services:
+  svn:
+    image: garethflowers/svn-server
+    container_name: svn-server
+    ports:
+      - 3690:3690
+    volumes:
+      - /home/ban/svn/repo:/var/opt/svn
+      
+  jenkins:
+    container_name: jenkins
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    user: root
+    ports:
+      - 8000:8080
+      - 50000:50000
+    volumes:
+      - /home/ban/jenkins/jenkins:/var/jenkins_home
+      - /home/ban/jenkins/.ssh:/root/.ssh
+    
