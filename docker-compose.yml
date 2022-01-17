@@ -1,23 +1,35 @@
 version: "3"
+
+networks:
+  outbound:
+    driver: bridge
+
 services:
   svn:
     image: garethflowers/svn-server
     container_name: svn-server
     ports:
-      - 3690:3690
+      - "3690:3690"
     volumes:
       - /home/ban/svn/repo:/var/opt/svn
-      
+    networks:
+      - outbound
+
   jenkins:
     container_name: jenkins
+    depends_on:
+      - svn
     build: 
       context: .
       dockerfile: Dockerfile
     user: root
     ports:
-      - 8000:8080
-      - 50000:50000
+      - "5002:22"
+      - "8000:8080"
+      - "50000:50000"
     volumes:
       - /home/ban/jenkins/jenkins:/var/jenkins_home
       - /home/ban/jenkins/.ssh:/root/.ssh
+    networks:
+      - outbound
     
